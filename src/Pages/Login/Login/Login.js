@@ -1,17 +1,59 @@
 import React, { useRef } from "react";
 import { Button, Form } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import {
+  useSendPasswordResetEmail,
+  useSignInWithEmailAndPassword,
+} from "react-firebase-hooks/auth";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import auth from "../../../firebase.init";
+import Loading from "../../Shared/Loading/Loading";
+import SocialLogin from "./SocialLogin/SocialLogin";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const emailRef = useRef("");
   const navigate = useNavigate();
+  const location = useLocation();
   const passwordRef = useRef("");
+  const from = location?.state?.from?.pathname || "/";
+
+  // Login with Email and password
+  const [signInWithEmailAndPassword, user, loading, error] =
+    useSignInWithEmailAndPassword(auth);
+
+  // forget password hooks
+  const [sendPasswordResetEmail, sending, forgetError] =
+    useSendPasswordResetEmail(auth);
+
+  // handle submit button
   const handleSubmit = (e) => {
     e.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-    console.log(email, password);
+    signInWithEmailAndPassword(email, password);
   };
+
+  // handle forget password function
+  const handleForgetPassword = async () => {
+    const email = emailRef.current.value;
+    if (email) {
+      toast.success("sent mail");
+      await sendPasswordResetEmail(email);
+    } else {
+      toast.error("Please enter your email");
+    }
+  };
+
+  // Loading untill user arrive
+  if (loading) {
+    return <Loading></Loading>;
+  }
+
+  // after login user navigation
+  user && navigate(from, { replace: true });
+
+  // navigate to register form function
   const navigateRegister = () => navigate("/register");
   return (
     <div className="w-50 mx-auto my-3">
@@ -25,9 +67,6 @@ const Login = () => {
             placeholder="Enter email"
             required
           />
-          <Form.Text className="text-muted">
-            We'll never share your email with anyone else.
-          </Form.Text>
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -39,11 +78,16 @@ const Login = () => {
             placeholder="Password"
           />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicCheckbox">
-          <Form.Check type="checkbox" label="Check me out" />
-        </Form.Group>
-        <Button variant="primary" type="submit">
-          Submit
+        <p
+          style={{ cursor: "pointer" }}
+          className="text-primary"
+          onClick={handleForgetPassword}
+        >
+          Forget password ?
+        </p>
+        {sending && <p>Please Kindly check your email</p>}
+        <Button variant="primary w-50 mx-auto d-block mb-2" type="submit">
+          Login
         </Button>
       </Form>
       <p>
@@ -56,6 +100,9 @@ const Login = () => {
           Please Register
         </span>
       </p>
+
+      <SocialLogin></SocialLogin>
+      <ToastContainer />
     </div>
   );
 };

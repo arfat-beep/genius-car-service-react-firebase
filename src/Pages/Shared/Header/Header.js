@@ -2,7 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import logo from "../../../images/logo.png";
+import { useAuthState } from "react-firebase-hooks/auth";
+import auth from "../../../firebase.init";
+import { signOut } from "firebase/auth";
 const Header = () => {
+  const [user] = useAuthState(auth);
   return (
     <Navbar
       collapseOnSelect
@@ -20,7 +24,7 @@ const Header = () => {
           <Nav className="me-auto">
             <Nav.Link href="home#services">Services</Nav.Link>
             <Nav.Link href="home#exparts">Exparts</Nav.Link>
-            <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
+            {/* <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
                 Another action
@@ -30,15 +34,23 @@ const Header = () => {
               <NavDropdown.Item href="#action/3.4">
                 Separated link
               </NavDropdown.Item>
-            </NavDropdown>
+            </NavDropdown> */}
           </Nav>
+
           <Nav>
+            {user && <p className="mt-2 text-white">{user?.displayName}</p>}
             <Nav.Link as={Link} to="/about">
               About
             </Nav.Link>
-            <Nav.Link as={Link} to="/login">
-              login
-            </Nav.Link>
+            {user ? (
+              <Nav.Link as={Link} onClick={() => signOut(auth)} to="/">
+                Sign Out
+              </Nav.Link>
+            ) : (
+              <Nav.Link as={Link} to="/login">
+                login
+              </Nav.Link>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>

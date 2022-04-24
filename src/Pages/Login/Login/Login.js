@@ -10,6 +10,7 @@ import auth from "../../../firebase.init";
 import Loading from "../../Shared/Loading/Loading";
 import SocialLogin from "./SocialLogin/SocialLogin";
 import "react-toastify/dist/ReactToastify.css";
+import PageTitle from "../../Shared/Helmet/PageTitle";
 
 const Login = () => {
   const emailRef = useRef("");
@@ -57,6 +58,7 @@ const Login = () => {
   const navigateRegister = () => navigate("/register");
   return (
     <div className="w-50 mx-auto my-3">
+      <PageTitle title="Login"></PageTitle>
       <h1 className="text-primary text-center">Please Login</h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formBasicEmail">

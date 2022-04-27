@@ -7,7 +7,7 @@ import {
 import "./Register.css";
 import auth from "../../../firebase.init";
 import SocialLogin from "../Login/SocialLogin/SocialLogin";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 const Register = () => {
   const [agree, setAgree] = useState(false);
   const navigate = useNavigate();

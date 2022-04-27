@@ -11,6 +11,7 @@ import Loading from "../../Shared/Loading/Loading";
 import SocialLogin from "./SocialLogin/SocialLogin";
 import "react-toastify/dist/ReactToastify.css";
 import PageTitle from "../../Shared/Helmet/PageTitle";
+import axios from "axios";
 
 const Login = () => {
   const emailRef = useRef("");
@@ -28,11 +29,14 @@ const Login = () => {
     useSendPasswordResetEmail(auth);
 
   // handle submit button
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-    signInWithEmailAndPassword(email, password);
+    await signInWithEmailAndPassword(email, password);
+    const { data } = await axios.post("http://localhost:5000/login", { email });
+    localStorage.setItem("accessToken", data.accessToken);
+    navigate("/");
   };
 
   // handle forget password function
@@ -52,7 +56,7 @@ const Login = () => {
   }
 
   // after login user navigation
-  user && navigate(from, { replace: true });
+  // user && navigate(from, { replace: true });
 
   // navigate to register form function
   const navigateRegister = () => navigate("/register");
@@ -104,7 +108,6 @@ const Login = () => {
       </p>
 
       <SocialLogin></SocialLogin>
-      <ToastContainer />
     </div>
   );
 };

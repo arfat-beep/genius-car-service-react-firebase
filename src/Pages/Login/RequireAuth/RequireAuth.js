@@ -6,7 +6,7 @@ import {
 import { Navigate, useLocation } from "react-router-dom";
 import auth from "../../../firebase.init";
 import Loading from "../../Shared/Loading/Loading";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 const RequireAuth = ({ children }) => {
   const location = useLocation();
@@ -31,7 +31,6 @@ const RequireAuth = ({ children }) => {
         >
           Verify email
         </button>
-        <ToastContainer />
       </div>
     );
   }

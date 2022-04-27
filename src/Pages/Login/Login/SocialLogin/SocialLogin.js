@@ -9,6 +9,7 @@ import facebookLogo from "../../../../images/facebook-circular-logo.png";
 import githubLogo from "../../../../images/github.png";
 import auth from "../../../../firebase.init";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 const SocialLogin = () => {
   const [signInWithGoogle, googleUser, googleLoading, googleError] =
     useSignInWithGoogle(auth);
@@ -17,6 +18,14 @@ const SocialLogin = () => {
   const navigate = useNavigate();
   googleUser && navigate("/");
   githubUser && navigate("/");
+
+  const handleGoogleSubmit = async () => {
+    await signInWithGoogle();
+    const { data } = await axios.post("http://localhost:5000/login", {
+      email: googleUser?.user?.email,
+    });
+    localStorage.setItem("accessToken", data.accessToken);
+  };
   return (
     <div>
       <div className="d-flex align-items-center">
@@ -30,7 +39,7 @@ const SocialLogin = () => {
       {githubLoading && <p className="text-warning">Loading... Please wait</p>}
       <button
         className="btn btn-info d-block mx-auto w-50 mb-3"
-        onClick={() => signInWithGoogle()}
+        onClick={handleGoogleSubmit}
       >
         <img
           src={googleLogo}

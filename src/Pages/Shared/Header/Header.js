@@ -26,8 +26,9 @@ const Header = () => {
             <Nav.Link href="home#exparts">Exparts</Nav.Link>
             {user && (
               <>
-                <Nav.Link href="addservice">Add Service</Nav.Link>
-                <Nav.Link href="manage">Manage</Nav.Link>
+                <Nav.Link href="/addservice">Add Service</Nav.Link>
+                <Nav.Link href="/manage">Manage</Nav.Link>
+                <Nav.Link href="/orders">Orders</Nav.Link>
               </>
             )}
             {/* <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
